@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Inventory - Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container dashboard">
+        <header>
+            <img src="logo.svg" alt="Cloud Inventory Logo" class="logo">
+            <h1>Cloud Inventory</h1>
+            <nav class="nav-links">
+                <a href="market.html">Market</a>
+                <a href="orders.html">Orders</a>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </nav>
+        </header>
+        <main>
+            <h2 id="welcomeMessage">Hello, User!</h2>
+            <div class="inventory-container">
+                <table id="inventoryTable">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Quantity</th>
+                            <th>Actions</th>
+                            <th>Market</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Inventory items will be dynamically added here -->
+                    </tbody>
+                </table>
+            </div>
+            <button id="addItemBtn" class="floating-btn">+</button>
+        </main>
+    </div>
+    <div id="addItemModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Item</h2>
+            <form id="addItemForm">
+                <input type="text" id="itemName" placeholder="Item Name" required>
+                <input type="number" id="itemQuantity" placeholder="Quantity" required>
+                <button type="submit">Add Item</button>
+            </form>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+

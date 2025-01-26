@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Inventory - Market</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container dashboard">
+        <header>
+            <img src="logo.svg" alt="Cloud Inventory Logo" class="logo">
+            <h1>Market</h1>
+            <nav class="nav-links">
+                <a href="dashboard.html">Inventory</a>
+                <a href="orders.html">Orders</a>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </nav>
+        </header>
+        <main>
+            <div class="inventory-container">
+                <table id="marketTable">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Market items will be dynamically added here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Order Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <h2>Place Order</h2>
+            <form id="orderForm">
+                <p id="itemDetails"></p>
+                <input type="hidden" id="orderItemName">
+                <input type="hidden" id="orderMaxStock">
+                <input type="number" id="orderQuantity" placeholder="Quantity" required>
+                <p id="orderError" class="error-message"></p>
+                <button type="submit">Place Order</button>
+                <button type="button" onclick="closeOrderModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="market.js"></script>
+</body>
+</html>
+

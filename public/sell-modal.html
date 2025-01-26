@@ -1,0 +1,24 @@
+<div id="sellModal" class="modal">
+    <div class="modal-content">
+        <h2>Sell Item on Market</h2>
+        <form id="sellForm">
+            <p id="sellItemDetails"></p>
+            <input type="hidden" id="sellItemName">
+            <input type="hidden" id="currentQuantity">
+            <div class="form-group">
+                <label for="sellPrice">Price ($)</label>
+                <input type="number" id="sellPrice" step="0.01" min="0.01" required placeholder="Enter selling price">
+            </div>
+            <div class="form-group">
+                <label for="sellQuantity">Quantity to Sell</label>
+                <input type="number" id="sellQuantity" min="1" required placeholder="Enter quantity">
+            </div>
+            <p id="sellError" class="error-message"></p>
+            <div class="modal-actions">
+                <button type="submit">List on Market</button>
+                <button type="button" onclick="closeSellModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+

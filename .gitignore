@@ -1,0 +1,5 @@
+node_modules/
+market feature/
+old update/
+# Local Netlify folder
+.netlify

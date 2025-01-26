@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Inventory - Orders</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container dashboard">
+        <header>
+            <img src="logo.svg" alt="Cloud Inventory Logo" class="logo">
+            <h1>Orders</h1>
+            <nav class="nav-links">
+                <a href="dashboard.html">Inventory</a>
+                <a href="market.html">Market</a>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </nav>
+        </header>
+        <main>
+            <div class="inventory-container">
+                <table id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>Order Date</th>
+                            <th>Item Name</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Orders will be dynamically added here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    <script src="orders.js"></script>
+</body>
+</html>
+
