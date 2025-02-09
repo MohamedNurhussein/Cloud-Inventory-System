@@ -1,3 +1,5 @@
+import './sell-modal.js';
+import './market.js'
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("loginForm")
   const signupForm = document.getElementById("signupForm")
@@ -186,24 +188,39 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function openSellModal(itemName, quantity) {
-    console.log("openSellModal: we are in")
-    const sellModal = document.getElementById("sellModal")
-    if (!sellModal) return // Exit if modal doesn't exist
-
-    const sellItemDetails = document.getElementById("sellItemDetails")
-    const sellItemName = document.getElementById("sellItemName")
-    const currentQuantity = document.getElementById("currentQuantity")
-    const sellQuantity = document.getElementById("sellQuantity")
-
-    sellItemDetails.textContent = `Item: ${itemName} (Available: ${quantity})`
-    sellItemName.value = itemName
-    currentQuantity.value = quantity
-    sellQuantity.max = quantity
-    sellQuantity.value = ""
-    document.getElementById("sellPrice").value = ""
-    document.getElementById("sellError").textContent = ""
-
-    sellModal.style.display = "block"
+    console.log("openSellModal: we are in");
+  
+    // Access modal and elements
+    const sellModal = document.getElementById("sellModal");
+    if (!sellModal) {
+      console.error("Sell Modal not found");
+      return;
+    }
+  
+    const sellItemDetails = document.getElementById("sellItemDetails");
+    const sellItemName = document.getElementById("sellItemName");
+    const currentQuantity = document.getElementById("currentQuantity");
+    const sellQuantity = document.getElementById("sellQuantity");
+    const sellPrice = document.getElementById("sellPrice");
+    const sellError = document.getElementById("sellError");
+  
+    // Verify all modal elements are available
+    if (!sellItemDetails || !sellItemName || !currentQuantity || !sellQuantity || !sellPrice || !sellError) {
+      console.error("One or more modal elements are missing");
+      return;
+    }
+  
+    // Populate modal fields
+    sellItemDetails.textContent = `Item: ${itemName} (Available: ${quantity})`;
+    sellItemName.value = itemName;
+    currentQuantity.value = quantity;
+    sellQuantity.max = quantity;
+    sellQuantity.value = "";
+    sellPrice.value = "";
+    sellError.textContent = "";
+  
+    // Show the modal
+    sellModal.style.display = "flex"; // Set to flex for proper centering
   }
   // Attach the function to the global window object
   window.openSellModal = openSellModal;

@@ -4,7 +4,416 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cloud Inventory - Login/Signup</title>
-    <link rel="stylesheet" href="styles.css">
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <style>
+        :root {
+  --primary-color: #3498db;
+  --secondary-color: #2980b9;
+  --background-color: #ecf0f1;
+  --text-color: #2c3e50;
+  --white: #ffffff;
+  --gray: #bdc3c7;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+  margin-right: 15px;
+}
+.logogo {
+  width: 150px; /* Adjust width as needed */
+  height: auto; /* Maintain aspect ratio */
+  display: block; /* Center the logo if needed */
+  margin: 0 auto; /* Center horizontally */
+}
+
+#loginToggle {
+  margin-right: 5px;
+}
+h1 {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+}
+
+.form-container {
+  background-color: var(--white);
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.form-toggle {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.form-toggle button {
+  flex: 1;
+  padding: 10px;
+  background-color: var(--gray);
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-toggle button.active {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+form {
+  display: none;
+}
+
+form.active {
+  display: block;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Dashboard styles */
+.dashboard header {
+  justify-content: space-between;
+}
+
+#welcomeMessage {
+  margin-bottom: 20px;
+}
+
+.inventory-container {
+  background-color: var(--white);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--gray);
+}
+
+th {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+.floating-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+  margin: 0 0 10px;
+}
+
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content input {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.modal-content button {
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.modal-content button:hover {
+  background-color: #0056b3;
+}
+
+.logout-btn {
+  width: auto;
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+/* Low stock row style */
+.low-stock {
+  background-color: #fff3cd; /* Light yellow background */
+  color: #856404; /* Dark yellow text */
+}
+
+.low-stock td {
+  border: 1px solid #ffeeba; /* Yellow border */
+}
+
+/* Align Edit and Delete Buttons */
+.inventory-container .actions {
+  display: flex;
+  gap: 10px; /* Space between buttons */
+  justify-content: flex-start;
+}
+
+.inventory-container button {
+  display: inline-block;
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px; /* Space between buttons */
+  background-color: #007bff; /* Default color for buttons */
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.inventory-container button:hover {
+  background-color: #0056b3; /* Hover effect for buttons */
+}
+
+.inventory-container button.delete-btn {
+  background-color: #dc3545; /* Red for delete button */
+}
+
+.inventory-container button.delete-btn:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  .form-container {
+    padding: 20px;
+  }
+
+  .floating-btn {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .logout-btn {
+    margin-top: 10px;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.form-container,
+.inventory-container {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+input,
+button {
+  transition: all 0.3s ease;
+}
+
+input:focus,
+button:hover {
+  transform: scale(1.02);
+}
+
+/* Added styles */
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-links a {
+  color: var(--text-color);
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.nav-links a:hover {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+.error-message {
+  color: #dc3545;
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+#orderForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#itemDetails {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  flex: 1;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.sell-btn {
+  background-color: #28a745;
+}
+
+.sell-btn:hover {
+  background-color: #218838;
+}
+
+/*  */
+.modal {
+  /* display: none; Hidden by default */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 50%;
+}
+.form-group {
+  margin-bottom: 15px;
+}
+.error-message {
+  color: red;
+}
+.modal-actions button {
+  margin-right: 10px;
+}
+    </style>
 </head>
 <body>
     <div class="container">
@@ -34,6 +443,6 @@
             </div>
         </main>
     </div>
-    <script src="script.js"></script>
+    <script src="../dist/bundle.js"></script>
 </body>
 </html>

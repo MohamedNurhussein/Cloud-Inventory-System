@@ -1,0 +1,128 @@
+/* market.css */
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2980b9;
+    --background-color: #ecf0f1;
+    --text-color: #2c3e50;
+    --white: #ffffff;
+    --gray: #bdc3c7;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+  }
+  
+  /* Market page container; the Layout component already provides a consistent container if needed */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Inventory container (for the market table) */
+  .inventory-container {
+    background-color: var(--white);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    margin-bottom: 20px;
+  }
+  
+  /* Market table styles */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th,
+  td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray);
+  }
+  
+  th {
+    background-color: var(--primary-color);
+    color: var(--white);
+  }
+  
+  /* Modal styles for the Order modal */
+  .modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modal-content {
+    background-color: var(--white);
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modal-content h2 {
+    margin-bottom: 10px;
+  }
+  
+  .modal-content form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .modal-content input {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid var(--gray);
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .modal-content button {
+    padding: 10px;
+    background-color: #007bff;
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .modal-content button:hover {
+    background-color: #0056b3;
+  }
+  
+  .error-message {
+    color: #dc3545;
+    margin-top: 5px;
+    font-size: 14px;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .container {
+      padding: 10px;
+    }
+  }
+  

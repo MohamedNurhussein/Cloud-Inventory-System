@@ -1,0 +1,60 @@
+/* orders.css */
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2980b9;
+    --background-color: #ecf0f1;
+    --text-color: #2c3e50;
+    --white: #ffffff;
+    --gray: #bdc3c7;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+  }
+  
+  /* You can use the container styles defined in your Layout or elsewhere if needed.
+     Here we focus on the orders table styling. */
+  
+  .inventory-container {
+    background-color: var(--white);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    margin-bottom: 20px;
+  }
+  
+  /* Table styles */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th,
+  td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray);
+  }
+  
+  th {
+    background-color: var(--primary-color);
+    color: var(--white);
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .inventory-container {
+      padding: 10px;
+    }
+  }
+  

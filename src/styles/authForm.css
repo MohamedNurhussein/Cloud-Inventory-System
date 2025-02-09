@@ -1,0 +1,129 @@
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2980b9;
+  --background-color: #ecf0f1;
+  --text-color: #2c3e50;
+  --white: #ffffff;
+  --gray: #bdc3c7;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.logo {
+  width: 110px;
+  margin-right: 15px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+}
+
+.form-container {
+  background-color: var(--white);
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.form-toggle {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.form-toggle button {
+  flex: 1;
+  padding: 10px;
+  margin-left: 5px;
+  background-color: var(--gray);
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-toggle button.active {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+/* By default hide all forms */
+form {
+  display: none;
+}
+
+/* Only the active form is displayed */
+form.active {
+  display: block;
+}
+
+form h2 {
+  margin-bottom: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: var(--secondary-color);
+}
+
+.error-message {
+  color: #dc3545;
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+  .form-container {
+    padding: 20px;
+  }
+}
