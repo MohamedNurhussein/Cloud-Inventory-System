@@ -1,31 +1,15 @@
+// #TODO: add loading idicator
 // src/pages/Dashboard.tsx
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import "../styles/dashboard.css";
 import { useAuth } from "../context/authContext";
 export default function Dashboard() {
   const { currentUser } = useAuth();
   // Initialize with a dummy item so TS can infer the shape.
-  const [items, setItems] = useState([{ name: "", quantity: 0 }]);
+  const [items, setItems] = useState([{ name: "", quantity: 1 }]);
   // Immediately clear the dummy value once the component mounts.
-  useEffect(() => {
-    async function fetchInventory() {
-      try {
-        const response = await fetch("/.netlify/functions/getInventory", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: currentUser.uid }),
-        }).then((res) => res.json());
-
-        console.log("response: ", response);
-        setItems(response);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    fetchInventory();
-  }, [items]);
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -34,15 +18,52 @@ export default function Dashboard() {
   const [newItemName, setNewItemName] = useState("");
   const [newItemQuantity, setNewItemQuantity] = useState(0);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    console.log("currentUser: ", currentUser);
+    //fetch inventory from server-side function
+    fetchInventory();
+  }, []);
 
+  async function fetchInventory() {
+    try {
+      const response = await fetch("/.netlify/functions/getInventory", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: currentUser.uid }),
+      }).then((res) => res.json());
+
+      console.log("response: ", response);
+      setItems(response);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  async function AddItem() {
+    try {
+      const response = await fetch("/.netlify/functions/addItem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: currentUser.uid,
+          name: newItemName,
+          quantity: newItemQuantity,
+        }),
+      });
+      //check if ok
+      if (response.ok) {
+        //refetch the inventory
+        await fetchInventory();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
   const openAddModal = () => {
     setNewItemName("");
     setNewItemQuantity(0);
     setIsEditing(false);
     setEditingIndex(null);
     setModalOpen(true);
-    console.log("...items:openModel, ", ...items);
   };
 
   const openEditModal = (index) => {
@@ -65,26 +86,9 @@ export default function Dashboard() {
       };
       setItems(updatedItems);
     } else {
-      //request addItem function
-      try {
-        const response = await fetch("/.netlify/functions/addItem", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userId: currentUser.uid,
-            name: newItemName,
-            quantity: newItemQuantity,
-          }),
-        });
-        console.log("did the fetch, ", response);
-      } catch (err) {
-        console.error(err);
-      }
-      console.log("added something");
-      // Add a new item to the list
-      // setItems([...items, { name: newItemName, quantity: newItemQuantity }]);
+      //add item to server-side function
+      await AddItem();
     }
-    console.log("...items: ", ...items);
     setModalOpen(false);
   };
 

@@ -2,18 +2,33 @@ import { useState } from "react";
 import { signup, login } from "../firebase/auth";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
-import "../styles/authForm.css"; // Use the updated CSS below
+import "../styles/authForm.css";
 import logo from "../assets/logo.svg";
 
 export default function AuthForm() {
   const navigate = useNavigate();
-  const { userLoggedIn, loading } = useAuth();
+  const { userLoggedIn, loading, currentUser } = useAuth();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState("");
+
+  async function addUserData() {
+    try {
+      await fetch("/.netlify/functions/addUserData", {
+        method: "POST",
+        body: JSON.stringify({
+          userId: currentUser.uid,
+          name: currentUser.displayName,
+          email: currentUser.email,
+        }),
+      });
+    } catch (e) {
+      console.error("failed to add user Data ,", e);
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,6 +38,8 @@ export default function AuthForm() {
         await login(email, password);
       } else {
         await signup(name, email, password);
+        //add user data to server-side function
+        addUserData()
       }
       navigate("/dashboard");
     } catch (err) {
@@ -77,7 +94,9 @@ export default function AuthForm() {
               />
               {error && <p className="error-message">{error}</p>}
               {loading ? (
-                <p>Processing...</p>
+                <div className="processing-contianer">
+                  <p className="processing">Processing...</p>
+                </div>
               ) : (
                 <button type="submit">Login</button>
               )}
@@ -111,7 +130,9 @@ export default function AuthForm() {
               />
               {error && <p className="error-message">{error}</p>}
               {loading ? (
-                <p>Processing...</p>
+                <div className="processing-contianer">
+                  <p className="processing">Processing...</p>
+                </div>
               ) : (
                 <button type="submit">Signup</button>
               )}

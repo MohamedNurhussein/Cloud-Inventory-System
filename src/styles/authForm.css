@@ -127,3 +127,9 @@ button:hover {
     padding: 20px;
   }
 }
+
+.processing-contianer{
+  display: flex;
+  justify-content: center; /* centers horizontally */
+  align-items: center;     /* centers vertically */
+}
