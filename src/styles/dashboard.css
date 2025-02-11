@@ -177,3 +177,9 @@ th {
 .low-stock td {
   border: 1px solid #ffeeba;
 }
+
+.processing-contianer {
+  display: flex;
+  justify-content: center; /* centers horizontally */
+  align-items: center; /* centers vertically */
+}

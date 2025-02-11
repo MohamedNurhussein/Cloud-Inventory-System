@@ -14,35 +14,35 @@ export default function Dashboard() {
   const [editingIndex, setEditingIndex] = useState(null);
   const [newItemName, setNewItemName] = useState("");
   const [newItemQuantity, setNewItemQuantity] = useState(0);
-
+  //treach loading state
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetchInventory();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchInventory() {
+    setLoading(true); //sart loading
     try {
+      console.log("on the fetching inventory");
       const res = await fetch("/.netlify/functions/getInventory", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: currentUser.uid }),
-      });
-      const response = await res.json();
-      console.log("response: ", response);
+      }).then((res) => res.json());
+      // const response = await res.json();
+      console.log("got a response: ", res);
 
       // If the response is an object, convert it to an array of [key, item] pairs.
-      if (
-        response &&
-        typeof response === "object" &&
-        !Array.isArray(response)
-      ) {
-        setItems(Object.entries(response));
-      } else if (Array.isArray(response)) {
-        // If the response is already an array (of key/item pairs), use it directly.
-        setItems(response);
+      if (res && typeof res === "object" && !Array.isArray(res)) {
+        setItems(Object.entries(res));
+      } else if (Array.isArray(res)) {
+        // If the res is already an array (of key/item pairs), use it directly.
+        setItems(res);
       } else {
         setItems([]);
       }
+      setLoading(false); // end loading
     } catch (e) {
       console.error(e);
     }
@@ -62,14 +62,12 @@ export default function Dashboard() {
       if (res.ok) {
         // Re-fetch the inventory to update the list.
         await fetchInventory();
+        // setLoading(false);
       }
     } catch (err) {
       console.error(err);
     }
   }
-
-  // src/pages/Dashboard.jsx
-  // ... previous code remains the same
   async function EditItem(key) {
     try {
       const response = await fetch("/.netlify/functions/updateItem", {
@@ -92,7 +90,23 @@ export default function Dashboard() {
     }
   }
 
-  // ... the rest of the component
+  async function DeleteItem(key) {
+    try {
+      const response = await fetch("/.netlify/functions/deleteItem", {
+        method: "DELETE",
+        body: JSON.stringify({
+          userId: currentUser.uid,
+          itemId: key,
+        }),
+      });
+      if (response.ok) {
+        //re-fetch the inventory
+        await fetchInventory();
+      }
+    } catch (err) {
+      console.errror(err);
+    }
+  }
 
   const openAddModal = () => {
     setNewItemName("");
@@ -131,9 +145,11 @@ export default function Dashboard() {
   };
 
   const handleDeleteItem = (index) => {
+    // destruct the key
+    const [key] = items[index];
     if (window.confirm("Are you sure you want to delete this item?")) {
-      // Optionally, you can call a server-side delete function here.
-      setItems(items.filter((_, i) => i !== index));
+      //remove item from server-side function
+      DeleteItem(key);
     }
   };
 
@@ -158,39 +174,53 @@ export default function Dashboard() {
                 <th>Market</th>
               </tr>
             </thead>
-            <tbody>
-              {items.length > 0 ? (
-                items.map(([key, item], index) => (
-                  <tr
-                    key={key}
-                    className={item.quantity < 5 ? "low-stock" : ""}
-                  >
-                    <td>{item.title}</td>
-                    <td>{item.quantity}</td>
-                    <td>
-                      <div className="actions">
-                        <button onClick={() => openEditModal(index)}>
-                          Edit
-                        </button>
-                        <button
-                          className="delete-btn"
-                          onClick={() => handleDeleteItem(index)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
-                    <td>
-                      <button onClick={() => openSellModal(item)}>Sell</button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
+            {loading ? (
+              <tbody>
                 <tr>
-                  <td colSpan="4">No items found</td>
+                  <td colSpan="4">
+                    <div className="processing-contianer">
+                      <p className="processing">Processing...</p>
+                    </div>
+                  </td>
                 </tr>
-              )}
-            </tbody>
+              </tbody>
+            ) : (
+              <tbody>
+                {items.length > 0 ? (
+                  items.map(([key, item], index) => (
+                    <tr
+                      key={key}
+                      className={item.quantity < 5 ? "low-stock" : ""}
+                    >
+                      <td>{item.title}</td>
+                      <td>{item.quantity}</td>
+                      <td>
+                        <div className="actions">
+                          <button onClick={() => openEditModal(index)}>
+                            Edit
+                          </button>
+                          <button
+                            className="delete-btn"
+                            onClick={() => handleDeleteItem(index)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                      <td>
+                        <button onClick={() => openSellModal(item)}>
+                          Sell
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4">No items found</td>
+                  </tr>
+                )}
+              </tbody>
+            )}
           </table>
         </div>
 
