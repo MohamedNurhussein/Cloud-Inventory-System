@@ -7,7 +7,7 @@ import logo from "../assets/logo.svg";
 
 export default function AuthForm() {
   const navigate = useNavigate();
-  const { userLoggedIn, loading, currentUser } = useAuth();
+  const { userLoggedIn, loading } = useAuth();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -15,14 +15,19 @@ export default function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState("");
 
-  async function addUserData() {
+  function capitalizeFirstLetter(text) {
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+
+  async function addUserData(userId, name, email) {
     try {
+      console.log("on async addUserData");
       await fetch("/.netlify/functions/addUserData", {
         method: "POST",
         body: JSON.stringify({
-          userId: currentUser.uid,
-          name: currentUser.displayName,
-          email: currentUser.email,
+          userId: userId,
+          name: capitalizeFirstLetter(name),
+          email: email,
         }),
       });
     } catch (e) {
@@ -35,16 +40,30 @@ export default function AuthForm() {
     setError("");
     try {
       if (isLogin) {
-        await login(email, password);
+       await login(email, password);
       } else {
-        await signup(name, email, password);
-        //add user data to server-side function
-        addUserData()
+        const user = await signup(name, email, password);
+        if (user) {
+          //add user data to server-side function
+          await addUserData(user.uid, name, email);
+        }
       }
       navigate("/dashboard");
     } catch (err) {
-      console.error("Authentication error:", err);
-      setError("Authentication failed. Please try again.");
+      switch (err.code) {
+        case "auth/invalid-email":
+          setError("Invalid email address");
+          break;
+        case "auth/wrong-password":
+          setError("Incorrect password");
+          break;
+        case "auth/user-not-found":
+          setError("User not found");
+          break;
+        default:
+          setError(err.message);
+          break;
+      }
     }
   };
 

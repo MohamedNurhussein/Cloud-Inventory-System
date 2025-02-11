@@ -1,46 +1,56 @@
-// #TODO: add loading idicator
-// src/pages/Dashboard.tsx
+// src/pages/Dashboard.jsx
 import { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import "../styles/dashboard.css";
 import { useAuth } from "../context/authContext";
+
 export default function Dashboard() {
   const { currentUser } = useAuth();
-  // Initialize with a dummy item so TS can infer the shape.
-  const [items, setItems] = useState([{ name: "", quantity: 1 }]);
-  // Immediately clear the dummy value once the component mounts.
 
+  // We'll store items as an array of [key, item] pairs.
+  const [items, setItems] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  // Here, editingIndex is either a number or null.
   const [editingIndex, setEditingIndex] = useState(null);
   const [newItemName, setNewItemName] = useState("");
   const [newItemQuantity, setNewItemQuantity] = useState(0);
 
   useEffect(() => {
-    console.log("currentUser: ", currentUser);
-    //fetch inventory from server-side function
     fetchInventory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchInventory() {
     try {
-      const response = await fetch("/.netlify/functions/getInventory", {
+      const res = await fetch("/.netlify/functions/getInventory", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: currentUser.uid }),
-      }).then((res) => res.json());
-
+      });
+      const response = await res.json();
       console.log("response: ", response);
-      setItems(response);
+
+      // If the response is an object, convert it to an array of [key, item] pairs.
+      if (
+        response &&
+        typeof response === "object" &&
+        !Array.isArray(response)
+      ) {
+        setItems(Object.entries(response));
+      } else if (Array.isArray(response)) {
+        // If the response is already an array (of key/item pairs), use it directly.
+        setItems(response);
+      } else {
+        setItems([]);
+      }
     } catch (e) {
       console.error(e);
     }
   }
+
   async function AddItem() {
     try {
-      const response = await fetch("/.netlify/functions/addItem", {
+      const res = await fetch("/.netlify/functions/addItem", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -49,15 +59,41 @@ export default function Dashboard() {
           quantity: newItemQuantity,
         }),
       });
-      //check if ok
-      if (response.ok) {
-        //refetch the inventory
+      if (res.ok) {
+        // Re-fetch the inventory to update the list.
         await fetchInventory();
       }
     } catch (err) {
       console.error(err);
     }
   }
+
+  // src/pages/Dashboard.jsx
+  // ... previous code remains the same
+  async function EditItem(key) {
+    try {
+      const response = await fetch("/.netlify/functions/updateItem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: currentUser.uid,
+          itemId: key,
+          title: newItemName,
+          quantity: newItemQuantity,
+        }),
+      });
+      if (response.ok) {
+        console.log("updating is great, doing re fetching...");
+        // re-fetch the inventory to update the table
+        await fetchInventory();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // ... the rest of the component
+
   const openAddModal = () => {
     setNewItemName("");
     setNewItemQuantity(0);
@@ -66,8 +102,9 @@ export default function Dashboard() {
     setModalOpen(true);
   };
 
+  // Since items are key/value pairs, destructure the pair.
   const openEditModal = (index) => {
-    const item = items[index];
+    const [key, item] = items[index];
     setNewItemName(item.name);
     setNewItemQuantity(item.quantity);
     setIsEditing(true);
@@ -75,18 +112,19 @@ export default function Dashboard() {
     setModalOpen(true);
   };
 
+  // When editing, preserve the original key.
   const handleAddOrEditItem = async (e) => {
     e.preventDefault();
     if (isEditing && editingIndex !== null) {
-      // Update the existing item
+      // get copy of original array
       const updatedItems = [...items];
-      updatedItems[editingIndex] = {
-        name: newItemName,
-        quantity: newItemQuantity,
-      };
-      setItems(updatedItems);
+      // destruct the key
+      const [key] = updatedItems[editingIndex];
+
+      // update item to server-side fucntion
+      await EditItem(key);
     } else {
-      //add item to server-side function
+      //add new item to server-side fucntion
       await AddItem();
     }
     setModalOpen(false);
@@ -94,11 +132,11 @@ export default function Dashboard() {
 
   const handleDeleteItem = (index) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
+      // Optionally, you can call a server-side delete function here.
       setItems(items.filter((_, i) => i !== index));
     }
   };
 
-  // A placeholder for the Sell Modal functionality.
   const openSellModal = (item) => {
     console.log(
       `Sell modal requested for "${item.name}" (Available: ${item.quantity})`
@@ -122,9 +160,9 @@ export default function Dashboard() {
             </thead>
             <tbody>
               {items.length > 0 ? (
-                items.map((item, index) => (
+                items.map(([key, item], index) => (
                   <tr
-                    key={index}
+                    key={key}
                     className={item.quantity < 5 ? "low-stock" : ""}
                   >
                     <td>{item.title}</td>
@@ -143,12 +181,7 @@ export default function Dashboard() {
                       </div>
                     </td>
                     <td>
-                      <button
-                        className="sell-btn"
-                        onClick={() => openSellModal(item)}
-                      >
-                        Sell on Market
-                      </button>
+                      <button onClick={() => openSellModal(item)}>Sell</button>
                     </td>
                   </tr>
                 ))
