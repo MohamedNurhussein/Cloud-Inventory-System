@@ -6,7 +6,7 @@ import "../styles/dashboard.css"; // or import your dashboard styles
 import "../styles/pageTitle.css"; // if you want to separate the page title styles
 
 export default function Layout({ children }) {
-  const navigate = useLocation();
+  const navigate = useNavigate();
   const location = useLocation();
   let pageTitle = "";
 

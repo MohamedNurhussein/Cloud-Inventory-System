@@ -29,13 +29,16 @@ export const handler = async (event) => {
 
     // Extract the data from the snapshot; default to an empty object if null
     const inventoryData = snapshot.val() || {};
-    const items = Object.values(inventoryData);
+    const keysAndItems = Object.entries(inventoryData);
 
-    console.log("Inventory items:", items);
+    console.log("keysAndItems: ", keysAndItems);
+    // const items = Object.values(inventoryData);
+
+    // console.log("Inventory items:", items);
 
     return {
       statusCode: 200,
-      body: JSON.stringify(items),
+      body: JSON.stringify(keysAndItems),
     };
   } catch (error) {
     console.error("Error fetching inventory:", error);
@@ -45,3 +48,9 @@ export const handler = async (event) => {
     };
   }
 };
+
+// keysAndItems:
+// [
+//   ["-OIl3zWvCfkdmKOHdyoI", { quantity: 5, title: "kitten" }],
+//   ["-OIl8kilc_0BqDxP153U", { quantity: 3, title: "dogs" }],
+// ];

@@ -4,10 +4,10 @@ import Dashboard from "./pages/dashboard";
 import Market from "./pages/market";
 import Orders from "./pages/orders";
 import { useAuth } from "./context/authContext";
-
+import { ErrorBoundary } from "react-error-boundary";
 const ProtectedRoute = ({ element }) => {
   const { userLoggedIn } = useAuth();
-  console.log("userLoggedIn: ", userLoggedIn);
+  //check if user is already logged in
   return userLoggedIn ? element : <Navigate to="/" />;
 };
 function App() {
@@ -18,7 +18,15 @@ function App() {
           <Route path="/" element={<AuthForm />} />
           <Route
             path="/dashboard"
-            element={<ProtectedRoute element={<Dashboard />} />}
+            element={
+              <ProtectedRoute
+                element={
+                  <ErrorBoundary fallback={<h1>Something went wrong</h1>}>
+                    <Dashboard />
+                  </ErrorBoundary>
+                }
+              />
+            }
           />
           <Route
             path="/market"

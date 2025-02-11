@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "../../firebase/firebase"; // Import Firebase auth
 import { onAuthStateChanged } from "firebase/auth";
-
+import AuthForm from "../../components/authForm";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -18,8 +18,11 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ currentUser, userLoggedIn: !!currentUser, loading }}>
+    <AuthContext.Provider
+      value={{ currentUser, userLoggedIn: !!currentUser, loading }}
+    >
       {children}
+      {/* <AuthForm /> */}
     </AuthContext.Provider>
   );
 };
