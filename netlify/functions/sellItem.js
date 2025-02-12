@@ -33,8 +33,8 @@ export const handler = async (event) => {
     await newItemMarketRef.set({
       sellerId: userId,
       itemId: itemId,
-      title: title,
-      quantity: sellQuantity,
+      name: title,
+      stock: sellQuantity,
       price: sellPrice,
     });
 

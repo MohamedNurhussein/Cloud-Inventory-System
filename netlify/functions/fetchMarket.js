@@ -1,5 +1,5 @@
 import { admin } from "../../src/firebase/admin";
-export const handler = async (event) => {
+export const handler = async () => {
   try {
     //get database
     const db = admin.database();

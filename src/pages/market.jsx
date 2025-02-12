@@ -1,5 +1,5 @@
 // src/pages/Market.jsx
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import "../styles/market.css";
@@ -7,26 +7,34 @@ import "../styles/market.css";
 export default function Market() {
   const navigate = useNavigate();
 
-  // Sample market items; in a real app, you might fetch these from your backend.
-  const [marketItems, setMarketItems] = useState([
-    { name: "Laptop", price: 999.99, stock: 50 },
-    { name: "Smartphone", price: 499.99, stock: 100 },
-    { name: "Tablet", price: 299.99, stock: 75 },
-  ]);
-  //check loading state
+  // Initialize market items with some default data if needed.
+  // After fetching, these will be replaced.
+  const [marketItems, setMarketItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  async function fetchMarket() {
-    setLoading(true);//start loading
-    try {
-      const response = await fetch(".netlify/functions/fetchMarket", {
-        method: "GET",
-      }).then((response) => response.json);
 
+  useEffect(() => {
+    fetchMarket();
+  }, []);
+
+  async function fetchMarket() {
+    setLoading(true); // Start loading
+    try {
+      const response = await fetch("/.netlify/functions/fetchMarket", {
+        method: "GET",
+      });
+      const body = await response.json();
+      const responseItems = body.data;
       if (response.ok) {
-        setLoading(false);//end of loading
+        // Convert the fetched data into an array of objects.
+        const items = responseItems.map(([id, item]) => ({ id, ...item }));
+        setMarketItems(items);
+      } else {
+        console.error("Error fetching market items:", body);
       }
     } catch (err) {
       console.error("Failed to fetch market: ", err);
+    } finally {
+      setLoading(false); // End loading regardless of success or failure
     }
   }
 
@@ -36,7 +44,6 @@ export default function Market() {
   const [orderQuantity, setOrderQuantity] = useState("");
   const [orderError, setOrderError] = useState("");
 
-  // Check authentication on mount (redirect if not logged in)
   const openOrderModal = (item) => {
     setSelectedItem(item);
     setOrderQuantity("");
@@ -49,53 +56,45 @@ export default function Market() {
     setOrderError("");
   };
 
-  const handleOrderSubmit = async (e) => {
-    e.preventDefault();
-    if (!selectedItem) return;
+  // const handleOrderSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (!selectedItem) return;
 
-    const maxStock = selectedItem.stock;
-    const quantity = parseInt(orderQuantity, 10);
-    if (isNaN(quantity) || quantity <= 0) {
-      setOrderError("Please enter a valid quantity");
-      return;
-    }
-    if (quantity > maxStock) {
-      setOrderError("Quantity exceeds available stock");
-      return;
-    }
+  //   const maxStock = selectedItem.stock;
+  //   const quantity = parseInt(orderQuantity, 10);
+  //   if (isNaN(quantity) || quantity <= 0) {
+  //     setOrderError("Please enter a valid quantity");
+  //     return;
+  //   }
+  //   if (quantity > maxStock) {
+  //     setOrderError("Quantity exceeds available stock");
+  //     return;
+  //   }
 
-    try {
-      // Replace this simulated API call with your actual API call as needed.
-      const response = await fetch("/.netlify/functions/placeOrderFromMarket", {
-        method: "POST",
-        body: JSON.stringify({ itemName: selectedItem.name, quantity }),
-        headers: { "Content-Type": "application/json" },
-      });
-      const result = await response.json();
+  //   try {
+  //     // Simulated API call; replace with your actual API endpoint if needed.
+  //     const response = await fetch("/.netlify/functions/placeOrderFromMarket", {
+  //       method: "POST",
+  //       body: JSON.stringify({ itemId: selectedItem.id ,itemName: selectedItem.name, quantity }),
+  //       headers: { "Content-Type": "application/json" },
+  //     });
+  //     const result = await response.json();
 
-      if (result.success) {
-        alert("Order placed successfully!");
-        closeOrderModal();
-        // Update the stock for the ordered item
-        setMarketItems((prevItems) =>
-          prevItems.map((item) =>
-            item.name === selectedItem.name
-              ? { ...item, stock: item.stock - quantity }
-              : item
-          )
-        );
-      } else {
-        setOrderError(result.message || "Failed to place order");
-      }
-    } catch (error) {
-      console.error("Error placing order:", error);
-      setOrderError("An error occurred while placing the order");
-    }
-  };
+  //     if (result.success) {
+  //       alert("Order placed successfully!");
+  //       closeOrderModal();
+  //       );
+  //     } else {
+  //       setOrderError(result.message || "Failed to place order");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error placing order:", error);
+  //     setOrderError("An error occurred while placing the order");
+  //   }
+  // };
 
   return (
     <Layout>
-      {/* The Layout component (used across pages) already renders the consistent NavBar. */}
       <main>
         <div className="inventory-container">
           <table id="marketTable">
@@ -107,18 +106,32 @@ export default function Market() {
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody>
-              {marketItems.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.name}</td>
-                  <td>${item.price.toFixed(2)}</td>
-                  <td>{item.stock}</td>
-                  <td>
-                    <button onClick={() => openOrderModal(item)}>Order</button>
+            {loading ? (
+              <tbody>
+                <tr>
+                  <td colSpan="4">
+                    <div className="processing-contianer">
+                      <p className="processing">Loading market items...</p>
+                    </div>
                   </td>
                 </tr>
-              ))}
-            </tbody>
+              </tbody>
+            ) : (
+              <tbody>
+                {marketItems.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.name}</td>
+                    <td>${item.price.toFixed(2)}</td>
+                    <td>{item.stock}</td>
+                    <td>
+                      <button onClick={() => openOrderModal(item)}>
+                        Order
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            )}
           </table>
         </div>
 
