@@ -1,12 +1,12 @@
 /* pageTitle.css */
 .page-title {
-    width: 100%;
-    background-color: var(--primary-color);
-    color: var(--white);
-    text-align: center;
-    padding: 10px 0;
-    margin-top: 120px; /* Adjust this if needed to ensure separation from your fixed NavBar */
-    font-size: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
+  position: sticky;
+  top: 110px;  /* Adjust this value if your navbar's height is different */
+  width: 100%;
+  background-color: var(--primary-color);
+  color: var(--white);
+  text-align: center;
+  padding: 10px 0;
+  font-size: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

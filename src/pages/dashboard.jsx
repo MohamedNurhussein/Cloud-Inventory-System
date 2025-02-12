@@ -14,15 +14,24 @@ export default function Dashboard() {
   const [editingIndex, setEditingIndex] = useState(null);
   const [newItemName, setNewItemName] = useState("");
   const [newItemQuantity, setNewItemQuantity] = useState(0);
-  //treach loading state
+  // true loading state
   const [loading, setLoading] = useState(true);
+
+  // --- New state variables for Sell Modal ---
+  const [isSellModalOpen, setSellModalOpen] = useState(false);
+  const [sellPrice, setSellPrice] = useState("");
+  const [sellQuantity, setSellQuantity] = useState("");
+  const [sellItem, setSellItem] = useState(null);
+  const [sellError, setSellError] = useState("");
+  // ------------------------------------------
+
   useEffect(() => {
     fetchInventory();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchInventory() {
-    setLoading(true); //sart loading
+    setLoading(true); // start loading
     try {
       console.log("on the fetching inventory");
       const res = await fetch("/.netlify/functions/getInventory", {
@@ -100,11 +109,32 @@ export default function Dashboard() {
         }),
       });
       if (response.ok) {
-        //re-fetch the inventory
+        // re-fetch the inventory
         await fetchInventory();
       }
     } catch (err) {
       console.errror(err);
+    }
+  }
+
+  async function SellItem(key) {
+    try {
+      const response = await fetch("/.netlify/functions/sellItem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: currentUser.uid,
+          itemId: key,
+          sellQuantity: Number(sellQuantity),
+          sellPrice: Number(sellPrice),
+        }),
+      });
+      if (response.ok) {
+        //re-fetch the inventory
+        await fetchInventory();
+      }
+    } catch (err) {
+      console.error("Failed to sell item: ", err);
     }
   }
 
@@ -126,6 +156,18 @@ export default function Dashboard() {
     setModalOpen(true);
   };
 
+  // --- New function for opening Sell Modal ---
+  const openSellModal = (index) => {
+    const [key, item] = items[index];
+    // Save both key and item details for use in the sell modal.
+    setSellItem({ key, ...item });
+    setSellPrice("");
+    setSellQuantity("");
+    setSellError("");
+    setSellModalOpen(true);
+  };
+  // ---------------------------------------------
+
   // When editing, preserve the original key.
   const handleAddOrEditItem = async (e) => {
     e.preventDefault();
@@ -138,7 +180,7 @@ export default function Dashboard() {
       // update item to server-side fucntion
       await EditItem(key);
     } else {
-      //add new item to server-side fucntion
+      // add new item to server-side fucntion
       await AddItem();
     }
     setModalOpen(false);
@@ -148,17 +190,28 @@ export default function Dashboard() {
     // destruct the key
     const [key] = items[index];
     if (window.confirm("Are you sure you want to delete this item?")) {
-      //remove item from server-side function
+      // remove item from server-side function
       DeleteItem(key);
     }
   };
 
-  const openSellModal = (item) => {
-    console.log(
-      `Sell modal requested for "${item.name}" (Available: ${item.quantity})`
-    );
-    alert(`Sell modal not implemented for "${item.name}"`);
-  };
+  async function handleSellSubmit(e) {
+    e.preventDefault();
+    //validate the price and quantity
+    if (sellQuantity <= 0 || sellPrice <= 0) {
+      setSellError("Price and quantity must be greater than zero.");
+      return;
+    }
+    if (sellQuantity > sellItem.quantity) {
+      setSellError("Sell quantity cannot exceed available stock.");
+      return;
+    }
+    setSellError("");
+    // sell item from server-side function
+    await SellItem(sellItem.key);
+    //close sell model
+    setSellModalOpen(false);
+  }
 
   return (
     <Layout>
@@ -196,7 +249,10 @@ export default function Dashboard() {
                       <td>{item.quantity}</td>
                       <td>
                         <div className="actions">
-                          <button onClick={() => openEditModal(index)}>
+                          <button
+                            className="edit-btn"
+                            onClick={() => openEditModal(index)}
+                          >
                             Edit
                           </button>
                           <button
@@ -208,7 +264,8 @@ export default function Dashboard() {
                         </div>
                       </td>
                       <td>
-                        <button onClick={() => openSellModal(item)}>
+                        {/* Updated Sell button to pass index so we have access to the key */}
+                        <button onClick={() => openSellModal(index)}>
                           Sell
                         </button>
                       </td>
@@ -252,6 +309,55 @@ export default function Dashboard() {
                 <button type="submit">
                   {isEditing ? "Update Item" : "Add Item"}
                 </button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* --- Sell Modal --- */}
+        {isSellModalOpen && (
+          <div className="modal" onClick={() => setSellModalOpen(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <h2>Sell Item on Market</h2>
+              {sellItem && (
+                <p>
+                  Listing <strong>{sellItem.title}</strong> (Available:{" "}
+                  {sellItem.quantity})
+                </p>
+              )}
+              <form onSubmit={handleSellSubmit}>
+                <div className="form-group">
+                  <label htmlFor="sellPrice">Price ($)</label>
+                  <input
+                    type="number"
+                    id="sellPrice"
+                    step="0.01"
+                    min="0.01"
+                    placeholder="Enter selling price"
+                    value={sellPrice}
+                    onChange={(e) => setSellPrice(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="sellQuantity">Quantity to Sell</label>
+                  <input
+                    type="number"
+                    id="sellQuantity"
+                    min="1"
+                    placeholder="Enter quantity"
+                    value={sellQuantity}
+                    onChange={(e) => setSellQuantity(e.target.value)}
+                    required
+                  />
+                </div>
+                {sellError && <p className="error-message">{sellError}</p>}
+                <div className="modal-actions">
+                  <button type="submit">List on Market</button>
+                  <button type="button" onClick={() => setSellModalOpen(false)}>
+                    Cancel
+                  </button>
+                </div>
               </form>
             </div>
           </div>

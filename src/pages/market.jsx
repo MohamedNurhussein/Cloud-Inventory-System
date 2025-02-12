@@ -13,6 +13,22 @@ export default function Market() {
     { name: "Smartphone", price: 499.99, stock: 100 },
     { name: "Tablet", price: 299.99, stock: 75 },
   ]);
+  //check loading state
+  const [loading, setLoading] = useState(true);
+  async function fetchMarket() {
+    setLoading(true);//start loading
+    try {
+      const response = await fetch(".netlify/functions/fetchMarket", {
+        method: "GET",
+      }).then((response) => response.json);
+
+      if (response.ok) {
+        setLoading(false);//end of loading
+      }
+    } catch (err) {
+      console.error("Failed to fetch market: ", err);
+    }
+  }
 
   // Order modal state
   const [orderModalVisible, setOrderModalVisible] = useState(false);
@@ -78,7 +94,7 @@ export default function Market() {
   };
 
   return (
-    <Layout >
+    <Layout>
       {/* The Layout component (used across pages) already renders the consistent NavBar. */}
       <main>
         <div className="inventory-container">
@@ -112,7 +128,8 @@ export default function Market() {
               <h2>Place Order</h2>
               {selectedItem && (
                 <p id="itemDetails">
-                  Ordering: {selectedItem.name} (Available: {selectedItem.stock})
+                  Ordering: {selectedItem.name} (Available: {selectedItem.stock}
+                  )
                 </p>
               )}
               <form onSubmit={handleOrderSubmit}>

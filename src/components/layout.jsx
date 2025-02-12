@@ -2,8 +2,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { logout } from "../firebase/auth";
 import NavBar from "./NavBar";
-import "../styles/dashboard.css"; // or import your dashboard styles
-import "../styles/pageTitle.css"; // if you want to separate the page title styles
+import "../styles/dashboard.css";  // Styles for your main content
 
 export default function Layout({ children }) {
   const navigate = useNavigate();
@@ -18,7 +17,8 @@ export default function Layout({ children }) {
     }
     navigate("/");
   };
-  // You can adjust this logic as needed
+
+  // Determine the page title based on the route
   switch (location.pathname) {
     case "/dashboard":
       pageTitle = "Dashboard";
@@ -35,12 +35,7 @@ export default function Layout({ children }) {
 
   return (
     <>
-      <NavBar onLogout={onLogout} />
-      {pageTitle && (
-        <div className="page-title">
-          <h2>{pageTitle}</h2>
-        </div>
-      )}
+      <NavBar onLogout={onLogout} pageTitle={pageTitle} />
       <div className="dashboard-container">
         <main>{children}</main>
       </div>

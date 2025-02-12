@@ -6,15 +6,17 @@
   --text-color: #2c3e50;
   --white: #ffffff;
   --gray: #bdc3c7;
+  --red: #dc3545;
 }
 
 /* Dashboard container styles */
 .dashboard-container {
   max-width: 1200px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
+  margin-top: 120px;
   padding: 20px;
   /* Add top padding to avoid content being hidden behind the fixed NavBar */
-  padding-top: 80px; /* Adjust if needed based on your header height */
+  /* padding-top: 80px; Adjust if needed based on your header height */
 }
 
 /* Inventory container styles */
@@ -61,16 +63,16 @@ th {
   transition: background-color 0.3s ease;
 }
 
-.actions button:hover {
+.delete-btn:hover {
+  background-color: var(--red);
+}
+
+.edit-btn:hover {
   background-color: var(--secondary-color);
 }
 
 .delete-btn {
   background-color: #dc3545;
-}
-
-.delete-btn:hover {
-  background-color: #c82333;
 }
 
 .sell-btn {
