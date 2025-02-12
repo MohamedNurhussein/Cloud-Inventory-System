@@ -51,9 +51,10 @@ export default function Dashboard() {
       } else {
         setItems([]);
       }
-      setLoading(false); // end loading
     } catch (e) {
       console.error(e);
+    } finally {
+      setLoading(false); // end loading
     }
   }
 
