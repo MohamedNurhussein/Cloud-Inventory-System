@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import AuthForm from "./components/authForm";
 import Dashboard from "./pages/dashboard";
 import Market from "./pages/market";
-import Orders from "./pages/orders";
+import Activity from "./pages/activity";
 import { useAuth } from "./context/authContext";
 import { ErrorBoundary } from "react-error-boundary";
 const ProtectedRoute = ({ element }) => {
@@ -33,8 +33,8 @@ function App() {
             element={<ProtectedRoute element={<Market />} />}
           />
           <Route
-            path="/orders"
-            element={<ProtectedRoute element={<Orders />} />}
+            path="/activity"
+            element={<ProtectedRoute element={<Activity />} />}
           />
         </Routes>
       </main>

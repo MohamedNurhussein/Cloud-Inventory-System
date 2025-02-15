@@ -3,8 +3,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import "../styles/market.css";
+import { useAuth } from "../context/authContext";
 
 export default function Market() {
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
 
   // Initialize market items with some default data if needed.
@@ -38,6 +40,30 @@ export default function Market() {
     }
   }
 
+  async function orderItem() {
+    try {
+      const response = await fetch("/.netlify/functions/orderItem", {
+        method: "POST",
+        body: JSON.stringify({
+          id: selectedItem.id,
+          userId: currentUser.uid,
+          userName: currentUser.displayName,
+          sellerId: selectedItem.sellerId,
+          itemName: selectedItem.name,
+          price: selectedItem.price,
+          availableStock: selectedItem.stock,
+          orderQuantity: orderQuantity,
+        }),
+      });
+      //chech if response is ok
+      if (response.ok) {
+        //refetch the market
+        await fetchMarket();
+      }
+    } catch (err) {
+      console.error("Failed to order item: ", err);
+    }
+  }
   // Order modal state
   const [orderModalVisible, setOrderModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -56,42 +82,33 @@ export default function Market() {
     setOrderError("");
   };
 
-  // const handleOrderSubmit = async (e) => {
-  //   e.preventDefault();
-  //   if (!selectedItem) return;
+  const handleOrderSubmit = async (e) => {
+    e.preventDefault();
+    if (!selectedItem) return;
 
-  //   const maxStock = selectedItem.stock;
-  //   const quantity = parseInt(orderQuantity, 10);
-  //   if (isNaN(quantity) || quantity <= 0) {
-  //     setOrderError("Please enter a valid quantity");
-  //     return;
-  //   }
-  //   if (quantity > maxStock) {
-  //     setOrderError("Quantity exceeds available stock");
-  //     return;
-  //   }
-
-  //   try {
-  //     // Simulated API call; replace with your actual API endpoint if needed.
-  //     const response = await fetch("/.netlify/functions/placeOrderFromMarket", {
-  //       method: "POST",
-  //       body: JSON.stringify({ itemId: selectedItem.id ,itemName: selectedItem.name, quantity }),
-  //       headers: { "Content-Type": "application/json" },
-  //     });
-  //     const result = await response.json();
-
-  //     if (result.success) {
-  //       alert("Order placed successfully!");
-  //       closeOrderModal();
-  //       );
-  //     } else {
-  //       setOrderError(result.message || "Failed to place order");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error placing order:", error);
-  //     setOrderError("An error occurred while placing the order");
-  //   }
-  // };
+    const maxStock = selectedItem.stock;
+    const quantity = parseInt(orderQuantity, 10);
+    if (isNaN(quantity) || quantity <= 0) {
+      setOrderError("Please enter a valid quantity");
+      return;
+    }
+    if (quantity > maxStock) {
+      setOrderError("Quantity exceeds available stock");
+      return;
+    }
+    console.log("item: ", selectedItem);
+    console.log("quantity: ", orderQuantity);
+    //call server-side function
+    orderItem();
+    closeOrderModal();
+    //   const result = await response.json();
+    //   if (result.success) {
+    //     alert("Order placed successfully!");
+    //     );
+    //   } else {
+    //     setOrderError(result.message || "Failed to place order");
+    //   }
+  };
 
   return (
     <Layout>
