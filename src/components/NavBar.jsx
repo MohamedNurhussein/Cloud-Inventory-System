@@ -14,9 +14,9 @@ export default function NavBar({ onLogout, pageTitle }) {
           <h1 className="title">Cloud Inventory</h1>
         </div>
         <nav className="nav-links">
-          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/dashboard">Inventory</Link>
           <Link to="/market">Market</Link>
-          <Link to="/orders">Orders</Link>
+          <Link to="/activity">Activity</Link>
           <button onClick={onLogout} className="logout-btn">
             Logout
           </button>

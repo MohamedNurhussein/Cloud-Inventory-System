@@ -21,13 +21,13 @@ export default function Layout({ children }) {
   // Determine the page title based on the route
   switch (location.pathname) {
     case "/dashboard":
-      pageTitle = "Dashboard";
+      pageTitle = "Inventory";
       break;
     case "/market":
       pageTitle = "Market";
       break;
-    case "/orders":
-      pageTitle = "Orders";
+    case "/activity":
+      pageTitle = "Marketplace Activity";
       break;
     default:
       pageTitle = "";
