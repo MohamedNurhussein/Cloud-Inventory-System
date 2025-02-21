@@ -1,14 +1,11 @@
 // src/pages/Market.jsx
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import "../styles/market.css";
 import { useAuth } from "../context/authContext";
 
 export default function Market() {
   const { currentUser } = useAuth();
-  const navigate = useNavigate();
-
   // Initialize market items with some default data if needed.
   // After fetching, these will be replaced.
   const [marketItems, setMarketItems] = useState([]);
@@ -98,16 +95,9 @@ export default function Market() {
     }
     console.log("item: ", selectedItem);
     console.log("quantity: ", orderQuantity);
-    //call server-side function
+    //call orderItem from server-side function
     orderItem();
     closeOrderModal();
-    //   const result = await response.json();
-    //   if (result.success) {
-    //     alert("Order placed successfully!");
-    //     );
-    //   } else {
-    //     setOrderError(result.message || "Failed to place order");
-    //   }
   };
 
   return (
