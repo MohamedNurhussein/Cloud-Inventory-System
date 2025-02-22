@@ -1,26 +1,22 @@
 import dotenv from "dotenv";
-dotenv.config(); // load environment variables
+dotenv.config();
 
-// var serviceAccount = require("path/to/serviceAccountKey.json");
 import admin from "firebase-admin";
-import serviceAccout from "../../serviceAccount.json"
-// Initialize Firebase Admin
+
 if (!admin.apps.length) {
-  admin.initializeApp({
-      credential: admin.credential.cert(serviceAccout),
-      databaseURL:
-      "https://inventory-management-sys-5ff0c-default-rtdb.europe-west1.firebasedatabase.app",
+  try {
+    admin.initializeApp({
+      credential: admin.credential.cert({
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      }),
+      databaseURL: process.env.FIREBASE_URL,
     });
+    console.log("Firebase Admin initialized successfully");
+  } catch (error) {
+    console.error("Firebase Admin initialization error:", error.stack);
+  }
 }
 
 export { admin };
-
-// admin.initializeApp({});
-
-
-// credential: admin.credential.cert({
-//   project_id: process.env.FIREBASE_PROJECT_ID,
-//   private_key: process.env.FIREBASE_PRIVATE_KEY,
-//   client_email: process.env.FIREBASE_CLIENT_EMAIL,
-// }),
-// databaseURL: process.env.FIREBASE_URL,
