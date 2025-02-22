@@ -1,11 +1,20 @@
 import { useState } from "react";
-import { signup, login } from "../firebase/auth";
+// import { signup, login } from "../firebase/auth";
+import { auth } from "../firebase/firebase";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import "../styles/authForm.css";
 import logo from "../assets/logo.svg";
+// import dotenv from "dotenv";
+// dotenv.config(); // load environment variables
 
 export default function AuthForm() {
+  // console.log(process.env.FIREBASE_CLIENT_EMAIL);
   const navigate = useNavigate();
   const { userLoggedIn, loading } = useAuth();
 
@@ -40,28 +49,55 @@ export default function AuthForm() {
     setError("");
     try {
       if (isLogin) {
-       await login(email, password);
+        //login
+        await signInWithEmailAndPassword(auth, email, password);
       } else {
-        const user = await signup(name, email, password);
-        if (user) {
-          //add user data to server-side function
-          await addUserData(user.uid, name, email);
-        }
+        //signup
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const user = userCredential.user;
+        //update display name
+        await updateProfile(user, {
+          displayName: capitalizeFirstLetter(name),
+        });
+        //add user data to server-side function
+        await addUserData(user.uid, name, email);
       }
       navigate("/dashboard");
     } catch (err) {
       switch (err.code) {
         case "auth/invalid-email":
-          setError("Invalid email address");
-          break;
-        case "auth/wrong-password":
-          setError("Incorrect password");
-          break;
         case "auth/user-not-found":
-          setError("User not found");
+        case "auth/wrong-password":
+        case "auth/invalid-credential":
+          setError("Invalid email or password. Please try again.");
           break;
+
+        case "auth/email-already-in-use":
+          setError(
+            "An account with this email already exists. Please sign in or use a different email."
+          );
+          break;
+
+        case "auth/weak-password":
+          setError(
+            "Please choose a stronger password (at least 6 characters)."
+          );
+          break;
+
+        case "auth/network-request-failed":
+          setError(
+            "Network error. Please check your connection and try again."
+          );
+          break;
+
         default:
-          setError(err.message);
+          // Log the actual error for debugging
+          console.error("Auth error:", err.code, err.message);
+          setError("An error occurred. Please try again later.");
           break;
       }
     }
@@ -80,14 +116,20 @@ export default function AuthForm() {
             <button
               id="loginToggle"
               className={isLogin ? "active" : ""}
-              onClick={() => setIsLogin(true)}
+              onClick={() => {
+                setIsLogin(true);
+                setError("");
+              }}
             >
               Login
             </button>
             <button
               id="signupToggle"
               className={!isLogin ? "active" : ""}
-              onClick={() => setIsLogin(false)}
+              onClick={() => {
+                setIsLogin(false);
+                setError("");
+              }}
             >
               Signup
             </button>
