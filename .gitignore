@@ -25,7 +25,6 @@ dist-ssr
 .netlify
 #private json package
 serviceAccount.json
-firebase.js
 
 market feature
 old update
