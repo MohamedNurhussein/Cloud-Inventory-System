@@ -1,6 +1,6 @@
 // src/pages/Market.jsx
 import { useState, useEffect } from "react";
-import Layout from "../components/Layout";
+import Layout from "../components/layout";
 import "../styles/market.css";
 import { useAuth } from "../context/authContext";
 
