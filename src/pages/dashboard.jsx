@@ -38,21 +38,17 @@ export default function Dashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: currentUser.uid }),
-      }).then((res) => res.json());
-      // const response = await res.json();
-      console.log("got a response: ", res);
+      });
+      const responseItems = await res.json();
 
-      // If the response is an object, convert it to an array of [key, item] pairs.
-      if (res && typeof res === "object" && !Array.isArray(res)) {
-        setItems(Object.entries(res));
-      } else if (Array.isArray(res)) {
-        // If the res is already an array (of key/item pairs), use it directly.
-        setItems(res);
+      if (res.ok) {
+        // set the inventory items
+        setItems(responseItems);
       } else {
-        setItems([]);
+        console.error("Error fetching inventory items:", responseItems);
       }
     } catch (e) {
-      console.error(e);
+      console.error("falied to fetch inventory: ", e);
     } finally {
       setLoading(false); // end loading
     }
@@ -150,7 +146,7 @@ export default function Dashboard() {
   // Since items are key/value pairs, destructure the pair.
   const openEditModal = (index) => {
     const [key, item] = items[index];
-    setNewItemName(item.name);
+    setNewItemName(item.title);
     setNewItemQuantity(item.quantity);
     setIsEditing(true);
     setEditingIndex(index);
