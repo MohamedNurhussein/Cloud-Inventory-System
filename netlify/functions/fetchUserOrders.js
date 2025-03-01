@@ -25,6 +25,9 @@ export const handler = async (event) => {
     //return a response
     return {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
         message: "fetched user orders successfully",
         data: orders,
@@ -33,6 +36,9 @@ export const handler = async (event) => {
   } catch (err) {
     return {
       statuscode: 500,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify("Error occurred while fetching user orders: " + err),
     };
   }

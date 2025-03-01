@@ -18,12 +18,18 @@ export const handler = async (event) => {
     //return a response
     return {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify("data added successfully"),
     };
   } catch (e) {
     console.error("Failed to addUserData: ", e);
     return {
       statusCode: 500,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify("Failed to addUserData"),
     };
   }

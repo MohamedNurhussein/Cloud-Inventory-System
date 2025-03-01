@@ -20,10 +20,18 @@ export const handler = async (event) => {
 
     return {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify("item updated successfully"),
     };
   } catch (err) {
-    console.error("Failed to update item: ", err);
-    return null;
+    return {
+      statusCode: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify("error updating item: ", err),
+    };
   }
 };

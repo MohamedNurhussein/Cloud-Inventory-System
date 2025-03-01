@@ -16,6 +16,9 @@ export const handler = async () => {
     //return a response
     return {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         message: "Market Fetched Successfully",
         data: MarketItems,
@@ -25,6 +28,9 @@ export const handler = async () => {
     console.error("Failed fetching market: ", err);
     return {
       statusCode: 500,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify("Failed fetch Market: ", err),
     };
   }

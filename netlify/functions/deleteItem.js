@@ -22,12 +22,18 @@ export const handler = async (event) => {
     //return a response
     return {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify("item deleted successfully"),
     };
   } catch (err) {
     console.error("Failed to delete item: ", err);
     return {
       statusCode: 500,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify("failed to delete item"),
     };
   }

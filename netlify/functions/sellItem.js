@@ -41,11 +41,17 @@ export const handler = async (event) => {
     //send a reponse back
     return {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify("Item Listed on the Market Successfully"),
     };
   } catch (err) {
     return {
       statusCode: 500,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify("Failed to sell item in the market, ", err),
     };
   }

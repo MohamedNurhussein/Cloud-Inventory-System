@@ -65,11 +65,17 @@ export const handler = async (event) => {
 
     return {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify("Item Ordered Successfully"),
     };
   } catch (err) {
     return {
       statuscode: 500,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify("Failed to order Item: " + err),
     };
   }

@@ -20,12 +20,18 @@ export const handler = async function (event) {
     //return a response
     return {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
       response: "ok",
     };
   } catch (err) {
     return {
       statusCode: 500,
-      message: console.log(err),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(console.log(err)),
     };
   }
 };
