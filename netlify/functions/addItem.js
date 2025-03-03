@@ -1,4 +1,4 @@
-import { admin } from "../../src/firebase/admin";
+import {admin} from "../../src/firebase/admin"
 // import { db } from "../../src/firebase/firebase";
 export const handler = async function (event) {
   try {

@@ -1,4 +1,4 @@
-import { admin } from "../../src/firebase/admin";
+import {admin} from "../../src/firebase/admin"
 export const handler = async (event) => {
   console.log("Function started");
   try {

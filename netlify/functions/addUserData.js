@@ -1,5 +1,4 @@
-// #TODO add user email , and displayName to node "/user/${userId}/"
-import { admin } from "../../src/firebase/admin";
+import {admin} from "../../src/firebase/admin"
 export const handler = async (event) => {
   try {
     //extract user data from body
