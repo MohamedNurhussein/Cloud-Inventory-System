@@ -1,6 +1,7 @@
 # Cloud Inventory Management System
 
 Welcome to The Cloud Inventory Management System—a cloud-based solution for small businesses and warehouses to manage inventory and track orders. It uses real-time data synchronization and serverless computing.
+
 --- 
 ## Table of Contents
 
