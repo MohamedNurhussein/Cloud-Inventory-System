@@ -1,9 +1,8 @@
 # Cloud Inventory Management System
 
-Welcome to The Cloud Inventory Management System is a modern, cloud-based application designed to help small businesses and warehouses manage their inventory, track orders, and facilitate transactions through an online marketplace. This system leverages real-time data synchronization and serverless computing to provide an efficient and seamless experience for users.
+Welcome to The Cloud Inventory Management System—a cloud-based solution for small businesses and warehouses to manage inventory and track orders. It uses real-time data synchronization and serverless computing.
 
 ---
-
 ## Table of Contents
 
 * [Overview & Technical Documentation](#overview--technical-documentation)
@@ -42,6 +41,8 @@ The system employs a serverless architecture to minimize infrastructure manageme
 
 
 ### Implementation Details
+
+- Authentication using firebase on the client
 
 #### Netlify Functions
 
@@ -92,7 +93,7 @@ The system is deployed on Netlify, leveraging:
 
 ### Conclusion
 
-The Cloud Inventory Management System showcases the power of cloud computing in building scalable and efficient inventory solutions. With its real-time capabilities and serverless architecture, the system provides a robust foundation for future improvements and integrations.
+The Cloud Inventory Management System showcases the power of cloud computing in building scalable and efficient inventory solutions. With its real-time capabilities and serverless architecture.
 
 ## User Guide/Quick Start
 
@@ -100,7 +101,7 @@ The Cloud Inventory Management System showcases the power of cloud computing in 
 
 Welcome to Cloud Inventory System. This is your gateway to managing your inventory and processing sales.
 
-### Go to [cloud-inventory-system.netlify.app](https://cloud-inventory-system.netlify.app)
+#### Go to [cloud-inventory-system.netlify.app](https://cloud-inventory-system.netlify.app)
 
 ### 1\. Signup or Login
 
