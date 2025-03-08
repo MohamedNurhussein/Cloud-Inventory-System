@@ -324,6 +324,18 @@ export default function Dashboard() {
               )}
               <form onSubmit={handleSellSubmit}>
                 <div className="form-group">
+                  <label htmlFor="sellQuantity">Quantity to Sell</label>
+                  <input
+                    type="number"
+                    id="sellQuantity"
+                    min="1"
+                    placeholder="Enter quantity"
+                    value={sellQuantity}
+                    onChange={(e) => setSellQuantity(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group">
                   <label htmlFor="sellPrice">Price ($)</label>
                   <input
                     type="number"
@@ -333,18 +345,6 @@ export default function Dashboard() {
                     placeholder="Enter selling price"
                     value={sellPrice}
                     onChange={(e) => setSellPrice(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="sellQuantity">Quantity to Sell</label>
-                  <input
-                    type="number"
-                    id="sellQuantity"
-                    min="1"
-                    placeholder="Enter quantity"
-                    value={sellQuantity}
-                    onChange={(e) => setSellQuantity(e.target.value)}
                     required
                   />
                 </div>
