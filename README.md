@@ -2,7 +2,6 @@
 
 Welcome to The Cloud Inventory Management System—a cloud-based solution for small businesses and warehouses to manage inventory and track orders. It uses real-time data synchronization and serverless computing.
 
----
 ## Table of Contents
 
 * [Overview & Technical Documentation](#overview--technical-documentation)
@@ -90,11 +89,11 @@ The system is deployed on Netlify, leveraging:
 - The system checks stock availability and updates the database.
 - An order is created and assigned a status (`Pending COD`, `Delivered`).
 - Sales records are updated for sellers.
-
+---
 ### Conclusion
 
 The Cloud Inventory Management System showcases the power of cloud computing in building scalable and efficient inventory solutions. With its real-time capabilities and serverless architecture.
-
+---
 ## User Guide/Quick Start
 
 ### [![Quick guidde](https://static.guidde.com/v0/qg%2FM7193jV9NWPKdB2VbRxun3F9yXH3%2F8URSQTre8BMUNe8Sq6YzJJ%2F9xFmeMiETaf4WcgXQvtdNs_cover.png?alt=media&token=a14786a7-a5eb-44b8-9cbc-e6954cb824e3)](https://app.guidde.com/share/playbooks/8URSQTre8BMUNe8Sq6YzJJ)
