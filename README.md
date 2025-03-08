@@ -39,7 +39,7 @@ The system employs a serverless architecture to minimize infrastructure manageme
 - **Backend**: Netlify Functions manage API requests and business logic.
 - **Database**: Firebase Realtime Database stores inventory, orders, and market data, ensuring instant updates across users.
 
-
+---
 ### Implementation Details
 
 - Authentication using firebase on the client
@@ -67,7 +67,7 @@ The system is deployed on Netlify, leveraging:
 - Secure HTTPS connections
 - Serverless backend execution
 
-
+---
 ### How It Works
 
 #### Inventory Management:
